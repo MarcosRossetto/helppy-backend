@@ -35,7 +35,6 @@ export default class UsersService {
     const { name, email, whatsapp, address } = user
     const capitalizedName = capitalizeString(name)
     try {
-      console.log('Aqui', name, email, whatsapp, address)
       await db('users').insert({
         id: uuidv4(),
         name: capitalizedName,

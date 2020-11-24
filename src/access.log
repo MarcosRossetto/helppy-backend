@@ -94,3 +94,5 @@
 ::1 - - [24/Nov/2020:16:00:08 +0000] "POST /users HTTP/1.1" 201 62
 ::1 - - [24/Nov/2020:16:00:17 +0000] "POST /users HTTP/1.1" 201 -
 ::1 - - [24/Nov/2020:16:00:19 +0000] "GET /connections HTTP/1.1" 404 150
+::1 - - [24/Nov/2020:17:17:26 +0000] "POST /categories-calls HTTP/1.1" 201 -
+::1 - - [24/Nov/2020:17:17:31 +0000] "GET /categories-calls HTTP/1.1" 200 81

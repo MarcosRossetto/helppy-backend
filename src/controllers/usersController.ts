@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 
-import isValidCPF from '../utils/validCpf'
 import isValidEmail from '../utils/validEmail'
 
 import UsersService from 'src/services/usersService'

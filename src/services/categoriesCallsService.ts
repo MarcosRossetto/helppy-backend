@@ -1,0 +1,38 @@
+import { Response } from 'express'
+
+import { v4 as uuidv4 } from 'uuid'
+import capitalizeString from '../utils/capitalizeString'
+
+import db from '../database/connection'
+
+interface ICategory {
+  name: string,
+}
+
+const categoryData = ['id', 'name']
+
+export default class CategoriesCallsService {
+  async index(res: Response) {
+    try {
+      const category = await db.select(...categoryData).table('categories_calls')
+      return res.status(200).json({ category })
+    } catch (err) {
+      return err.detail
+    }
+  }
+
+  async create(category: ICategory, res: Response) {
+    const { name } = category
+    const capitalizedName = capitalizeString(name)
+    try {
+      await db('categories_calls').insert({
+        id: uuidv4(),
+        name: capitalizedName,
+      })
+    } catch (err) {
+      return res.status(400).json({
+        message: err.detail
+      })
+    }
+  }
+}
