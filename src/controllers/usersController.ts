@@ -18,37 +18,12 @@ export default class UsersController {
     }
   }
 
-  async findOne(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params
-    try {
-      await usersService.findOne(id, res)
-      return res.status(200).send()
-    } catch (err) {
-      return res.status(500).json({
-        message: 'Internal server error'
-      })
-    }
-  }
-
-  async findCpf(req: Request, res: Response): Promise<Response> {
-    const { cpf } = req.params
-    try {
-      await usersService.findCpf(cpf, res)
-      return res.status(200).send()
-    } catch (err) {
-      return res.status(500).json({
-        message: 'Internal server error'
-      })
-    }
-  }
-
   async create(req: Request, res: Response) {
-    const { name, password, email, cpf } = req.body
-    if (!name || !password || !email || !cpf) return res.status(400).json({ message: 'Data cannot be empty' })
-    if (!isValidCPF(cpf)) return res.status(400).json({ message: 'Invalid CPF' })
+    const { name, email, whatsapp, address } = req.body
+    if (!name || !email || !whatsapp || !address) return res.status(400).json({ message: 'Data cannot be empty' })
     if (!isValidEmail(email)) return res.status(400).json({ message: 'Invalid Email' })
     try {
-      await usersService.create({ name, password, email, cpf }, res)
+      await usersService.create({ name, email, whatsapp, address }, res)
       return res.status(201).send()
     } catch (err) {
       return res.status(500).json({

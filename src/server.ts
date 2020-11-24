@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
+import cors from 'cors'
 import path from 'path'
 import fs from 'fs'
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3333
 
 const app = express()
 
+app.use(cors())
 app.use(morgan('dev'))
 app.use(morgan('common', {
   stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
