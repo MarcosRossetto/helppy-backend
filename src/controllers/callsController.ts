@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 
-import AvailableTimesService from 'src/services/availableTimesService'
+import CallsService from 'src/services/callsService'
 
-const availableTimesService = new AvailableTimesService()
+const callsService = new CallsService()
 
-export default class AvailableTimesController {
+export default class CallsController {
   async index(req: Request, res: Response): Promise<Response> {
     try {
-      await availableTimesService.index(res)
+      await callsService.index(res)
     } catch (err) {
       return res.status(500).json({
         message: 'Internal server error'
@@ -16,10 +16,10 @@ export default class AvailableTimesController {
   }
 
   async create(req: Request, res: Response) {
-    const { available_time } = req.body
-    if (!available_time) return res.status(400).json({ message: 'Data cannot be empty' })
+    const { user, description, schedule, category } = req.body
+    if (!description || !schedule || !category || !user) return res.status(400).json({ message: 'Data cannot be empty' })
     try {
-      await availableTimesService.create({ available_time }, res)
+      await callsService.create({ user, description, schedule, category }, res)
       return res.status(201).send()
     } catch (err) {
       return res.status(500).json({
