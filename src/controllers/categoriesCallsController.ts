@@ -16,10 +16,10 @@ export default class CategoriesCallsController {
   }
 
   async create(req: Request, res: Response) {
-    const { name } = req.body
-    if (!name) return res.status(400).json({ message: 'Data cannot be empty' })
+    const { category } = req.body
+    if (!category) return res.status(400).json({ message: 'Data cannot be empty' })
     try {
-      await categoriesCallsService.create({ name }, res)
+      await categoriesCallsService.create({ category }, res)
       return res.status(201).send()
     } catch (err) {
       return res.status(500).json({

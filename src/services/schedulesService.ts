@@ -19,6 +19,15 @@ export default class SchedulesService {
     }
   }
 
+  async active(res: Response) {
+    try {
+      const schedule = await db.select('*').table('schedules').where('active', true)
+      return res.status(200).json({ schedule })
+    } catch (err) {
+      return err.detail
+    }
+  }
+
   async create(schedules: ISchedule, res: Response) {
     const { schedule } = schedules
     const capitalizedName = capitalizeString(schedule)

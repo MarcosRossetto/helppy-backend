@@ -15,6 +15,16 @@ export default class AvailableTimesController {
     }
   }
 
+  async active(req: Request, res: Response): Promise<Response> {
+    try {
+      await schedulesService.active(res)
+    } catch (err) {
+      return res.status(500).json({
+        message: 'Internal server error'
+      })
+    }
+  }
+
   async create(req: Request, res: Response) {
     const { schedule } = req.body
     if (!schedule) return res.status(400).json({ message: 'Data cannot be empty' })

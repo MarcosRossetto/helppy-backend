@@ -72,6 +72,23 @@ export default class UsersService {
           category,
         })
 
+        await trx('connections').insert({
+          user_id: user_id[0].id
+        })
+
+
+        const schedule_active = await trx('schedules').select('active').where('id', schedule)
+        if (schedule_active[0].id === true) {
+          await trx('schedules').where('id', schedule).update({
+            active: false
+          })
+        } else {
+          await trx.rollback()
+          return res.status(400).json({
+            message: 'time not available'
+          })
+        }
+
         trx.commit()
       }
     } catch (err) {

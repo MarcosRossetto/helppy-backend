@@ -6,10 +6,10 @@ import capitalizeString from '../utils/capitalizeString'
 import db from '../database/connection'
 
 interface ICategory {
-  name: string,
+  category: string,
 }
 
-const categoryData = ['id', 'name']
+const categoryData = ['id', 'category']
 
 export default class CategoriesCallsService {
   async index(res: Response) {
@@ -21,13 +21,13 @@ export default class CategoriesCallsService {
     }
   }
 
-  async create(category: ICategory, res: Response) {
-    const { name } = category
-    const capitalizedName = capitalizeString(name)
+  async create(categories: ICategory, res: Response) {
+    const { category } = categories
+    const capitalizedCategory = capitalizeString(category)
     try {
       await db('categories_calls').insert({
         id: uuidv4(),
-        name: capitalizedName,
+        category: capitalizedCategory,
       })
     } catch (err) {
       return res.status(400).json({
