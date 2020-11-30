@@ -21,6 +21,15 @@ export default class CategoriesCallsService {
     }
   }
 
+  async getById(id: string, res: Response) {
+    try {
+      const category = await db.select('*').table('categories_calls').where('id', id)
+      return res.status(200).json({ category })
+    } catch (err) {
+      return err.detail
+    }
+  }
+
   async create(categories: ICategory, res: Response) {
     const { category } = categories
     const capitalizedCategory = capitalizeString(category)

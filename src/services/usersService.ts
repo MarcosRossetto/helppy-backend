@@ -31,6 +31,15 @@ export default class UsersService {
     }
   }
 
+  async getById(id: string, res: Response) {
+    try {
+      const user = await db.select('*').table('users').where('id', id)
+      return res.status(200).json({ user })
+    } catch (err) {
+      return err.detail
+    }
+  }
+
   async create(user: IUser, res: Response) {
     const { name, email, whatsapp, address } = user
     const capitalizedName = capitalizeString(name)

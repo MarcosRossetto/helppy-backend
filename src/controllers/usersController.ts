@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 
 import isValidEmail from '../utils/validEmail'
+import isValidUuidv4 from '../utils/validUuidv4'
 
 import UsersService from 'src/services/usersService'
 
@@ -10,6 +11,19 @@ export default class UsersController {
   async index(req: Request, res: Response): Promise<Response> {
     try {
       await usersService.index(res)
+    } catch (err) {
+      return res.status(500).json({
+        message: 'Internal server error'
+      })
+    }
+  }
+
+  async getById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params
+    if (!id) return res.status(400).json({ message: 'Data cannot be empty' })
+    if (!isValidUuidv4(id)) return res.status(400).json({ message: 'Invalid ID' })
+    try {
+      await usersService.getById(id, res)
     } catch (err) {
       return res.status(500).json({
         message: 'Internal server error'

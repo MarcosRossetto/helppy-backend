@@ -16,17 +16,20 @@ const callsController = new CallsController()
 const connectionsController = new ConnectionsController()
 
 routes.get('/users', usersController.index)
+routes.get('/users/:id', usersController.getById)
 routes.post('/users', usersController.create)
 
 routes.get('/categories-calls', categoriesCallsController.index)
+routes.get('/categories-calls/:id', categoriesCallsController.getById)
 routes.post('/categories-calls', categoriesCallsController.create)
 
 routes.get('/schedules', scheduleController.index)
+routes.get('/schedules/:id', scheduleController.getById)
 routes.get('/schedules/active', scheduleController.active)
 routes.post('/schedules', scheduleController.create)
 
-routes.post('/calls', callsController.create)
 routes.get('/calls', callsController.index)
+routes.post('/calls', callsController.create)
 
 routes.get('/connections', connectionsController.index)
 routes.post('/connections', connectionsController.create)
