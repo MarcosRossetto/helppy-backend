@@ -61,7 +61,7 @@ export default class AvailableTimesController {
       return res.status(204).send()
     } catch (err) {
       return res.status(500).json({
-        message: 'Unexpected error while deleting call'
+        message: 'Unexpected error while deleting schedule'
       })
     }
   }

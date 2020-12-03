@@ -9,6 +9,10 @@ interface ICategory {
   category: string,
 }
 
+interface IDelete {
+  id: string
+}
+
 const categoryData = ['id', 'category']
 
 export default class CategoriesCallsService {
@@ -38,6 +42,16 @@ export default class CategoriesCallsService {
         id: uuidv4(),
         category: capitalizedCategory,
       })
+    } catch (err) {
+      return res.status(400).json({
+        message: err.detail
+      })
+    }
+  }
+
+  async delete(category: IDelete, res: Response) {
+    try {
+      await db('categories_calls').where('id', category.id).delete()
     } catch (err) {
       return res.status(400).json({
         message: err.detail

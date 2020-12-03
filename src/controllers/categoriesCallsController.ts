@@ -43,4 +43,17 @@ export default class CategoriesCallsController {
     }
   }
 
+  async delete(req: Request, res: Response) {
+    const { id } = req.params
+    if (!id) return res.status(400).json({ message: 'Data cannot be empty' })
+    try {
+      await categoriesCallsService.delete({ id }, res)
+      return res.status(204).send()
+    } catch (err) {
+      return res.status(500).json({
+        message: 'Unexpected error while deleting category'
+      })
+    }
+  }
+
 }

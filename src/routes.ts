@@ -22,6 +22,7 @@ routes.post('/users', usersController.create)
 routes.get('/categories-calls', categoriesCallsController.index)
 routes.get('/categories-calls/:id', categoriesCallsController.getById)
 routes.post('/categories-calls', categoriesCallsController.create)
+routes.delete('/categories-calls/:id', categoriesCallsController.delete)
 
 routes.get('/schedules', scheduleController.index)
 routes.get('/schedules/filter/id/:id', scheduleController.getById)
