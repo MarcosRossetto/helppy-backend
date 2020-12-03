@@ -5,6 +5,7 @@ import CategoriesCallsController from '@controllers/categoriesCallsController'
 import ScheduleController from '@controllers/schedulesController'
 import CallsController from '@controllers/callsController'
 import ConnectionsController from '@controllers/connectionsController'
+import LoginController from '@controllers/loginController'
 
 
 const routes = Router()
@@ -14,6 +15,7 @@ const categoriesCallsController = new CategoriesCallsController()
 const scheduleController = new ScheduleController()
 const callsController = new CallsController()
 const connectionsController = new ConnectionsController()
+const loginController = new LoginController()
 
 routes.get('/users', usersController.index)
 routes.get('/users/:id', usersController.getById)
@@ -40,5 +42,8 @@ routes.put('/calls/:id', callsController.update)
 
 routes.get('/connections', connectionsController.index)
 routes.post('/connections', connectionsController.create)
+
+routes.get('/login-admin', loginController.index)
+routes.post('/login-admin', loginController.create)
 
 export default routes
