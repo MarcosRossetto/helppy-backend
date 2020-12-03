@@ -9,10 +9,14 @@ interface ISchedule {
   schedule: string,
 }
 
+interface IDelete {
+  id: string
+}
+
 export default class SchedulesService {
   async index(res: Response) {
     try {
-      const schedule = await db.select('*').table('schedules')
+      const schedule = await db.select('*').table('schedules').orderBy('schedule')
       return res.status(200).json({ schedule })
     } catch (err) {
       return err.detail
@@ -48,6 +52,16 @@ export default class SchedulesService {
     } catch (err) {
       return res.status(400).json({
         msg: err,
+        message: err.detail
+      })
+    }
+  }
+
+  async delete(schedule: IDelete, res: Response) {
+    try {
+      await db('schedules').where('id', schedule.id).delete()
+    } catch (err) {
+      return res.status(400).json({
         message: err.detail
       })
     }

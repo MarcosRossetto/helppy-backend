@@ -24,12 +24,18 @@ routes.get('/categories-calls/:id', categoriesCallsController.getById)
 routes.post('/categories-calls', categoriesCallsController.create)
 
 routes.get('/schedules', scheduleController.index)
-routes.get('/schedules/:id', scheduleController.getById)
+routes.get('/schedules/filter/id/:id', scheduleController.getById)
 routes.get('/schedules/active', scheduleController.active)
 routes.post('/schedules', scheduleController.create)
+routes.delete('/schedules/:id', scheduleController.delete)
 
 routes.get('/calls', callsController.index)
+routes.get('/calls/filter/user/:user', callsController.getByUser)
+routes.get('/calls/filter/date', callsController.getByDate)
+routes.get('/calls/date/user', callsController.getByUserDate)
+
 routes.post('/calls', callsController.create)
+routes.put('/calls/:id', callsController.update)
 
 routes.get('/connections', connectionsController.index)
 routes.post('/connections', connectionsController.create)

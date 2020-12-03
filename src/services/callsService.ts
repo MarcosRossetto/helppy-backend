@@ -24,6 +24,10 @@ interface ICall {
   schedule: string
 }
 
+interface IUpdate {
+  id: string
+  solution: string
+}
 
 export default class UsersService {
   async index(res: Response) {
@@ -31,9 +35,89 @@ export default class UsersService {
       const users = await db.select('*').table('calls')
       return res.status(200).json({ users })
     } catch (err) {
-      return err.detail
+      return res.status(500).json({
+        message: err.detail
+      })
     }
   }
+
+  async getByUser(user: string, res: Response) {
+    try {
+      const calls = await db({ a: 'calls', b: 'users' }).select('a.*').whereRaw('?? = ??', ['a.user', 'b.id']).andWhere('b.name', 'like', `${capitalizeString(user)}%`)
+      return res.status(200).json({ calls })
+    } catch (err) {
+      return res.status(500).json({
+        message: err.detail
+      })
+    }
+  }
+
+  async getByDate(from, to, res: Response) {
+    if (!from) {
+      try {
+        const calls = await db.select('*').from('calls').where('created_at', '<=', to + 'T23:59:59.999Z')
+        return res.status(200).json({ calls })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+          message: err.detail
+        })
+      }
+    }
+    const dateNow = new Date()
+    if (from && to) {
+      from += 'T00:00:00.000Z'
+      to += 'T23:59:59.999Z'
+    }
+    if (!to) to = `${dateNow.toISOString().substring(0, 10)}T23:59:59.999Z`
+
+    try {
+      const calls = await db.select('*').from('calls').whereBetween('created_at', [from, to])
+      return res.status(200).json({ calls })
+    } catch (err) {
+      return res.status(500).json({
+        message: err.detail
+      })
+    }
+  }
+
+  async getByUserDate(name, from, to, res: Response) {
+    if (!from) {
+      try {
+        const calls = await db({ a: 'calls', b: 'users' })
+          .select('a.*')
+          .whereRaw('?? = ??', ['a.user', 'b.id'])
+          .andWhere('b.name', 'like', `${capitalizeString(name)}%`)
+          .andWhere('a.created_at', '<=', to + 'T23:59:59.999Z')
+        return res.status(200).json({ calls })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+          message: err.detail
+        })
+      }
+    }
+    const dateNow = new Date()
+    if (from && to) {
+      from += 'T00:00:00.000Z'
+      to += 'T23:59:59.999Z'
+    }
+    if (!to) to = `${dateNow.toISOString().substring(0, 10)}T23:59:59.999Z`
+
+    try {
+      const calls = await db({ a: 'calls', b: 'users' })
+        .select('a.*')
+        .whereRaw('?? = ??', ['a.user', 'b.id'])
+        .andWhere('b.name', 'like', `${capitalizeString(name)}%`)
+        .whereBetween('created_at', [from, to])
+      return res.status(200).json({ calls })
+    } catch (err) {
+      return res.status(500).json({
+        message: err.detail
+      })
+    }
+  }
+
 
   async create(call: ICall, res: Response) {
     const { user, description, category, schedule } = call
@@ -78,10 +162,8 @@ export default class UsersService {
 
 
         const schedule_active = await trx('schedules').select('active').where('id', schedule)
-        if (schedule_active[0].id === true) {
-          await trx('schedules').where('id', schedule).update({
-            active: false
-          })
+        if (schedule_active[0].active === true) {
+          await trx('schedules').where('id', schedule).delete()
         } else {
           await trx.rollback()
           return res.status(400).json({
@@ -91,6 +173,22 @@ export default class UsersService {
 
         trx.commit()
       }
+    } catch (err) {
+      await trx.rollback()
+      return res.status(400).json({
+        message: err.detail
+      })
+    }
+  }
+
+  async update(call: IUpdate, res: Response) {
+    const trx = await db.transaction()
+    const date = new Date()
+    try {
+      await trx('calls').where('id', call.id).update('solution', call.solution)
+      await trx('calls').where('id', call.id).update('closing_date', date.toISOString())
+      await trx('calls').where('id', call.id).update('completed', true)
+      trx.commit()
     } catch (err) {
       await trx.rollback()
       return res.status(400).json({
